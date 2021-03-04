@@ -80,7 +80,7 @@ void setup()
 {
     STB.setHostname(HOSTNAME);
     STB.setApName(AP_NAME);
-    STB.begin();
+    STB.begin(false, true, true);
 
     initClock();
     initESPUI();
