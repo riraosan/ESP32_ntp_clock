@@ -28,8 +28,8 @@ SOFTWARE.
 #include <Ticker.h>
 #include <esp32-hal-log.h>
 
-#define HOSTNAME "esp32_clock"
-#define AP_NAME "ESP32-G-AP"
+#define HOSTNAME "atom_clock"
+#define AP_NAME "ATOM-G-AP"
 
 Ticker clocker;
 SerialTelnetBridgeClass STB;
@@ -50,7 +50,7 @@ String getTime()
             tm->tm_min,
             tm->tm_sec);
 
-    log_n("[date & time] %s", String(buffer).c_str());
+    log_d("[date & time] %s", String(buffer).c_str());
 
     return String(buffer);
 }
@@ -89,8 +89,6 @@ void setup()
 void loop()
 {
     STB.handle();
-
-
 
     yield();
 }
