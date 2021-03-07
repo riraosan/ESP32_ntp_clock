@@ -50,7 +50,7 @@ String getTime()
             tm->tm_min,
             tm->tm_sec);
 
-    log_d("[date & time] %s", String(buffer).c_str());
+    //log_d("[date & time] %s", String(buffer).c_str());
 
     return String(buffer);
 }
