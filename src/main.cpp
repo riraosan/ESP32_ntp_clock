@@ -71,7 +71,7 @@ void initClock()
 
 void initESPUI()
 {
-    ESPUI.setVerbosity(Verbosity::VerboseJSON);
+    ESPUI.setVerbosity(Verbosity::Quiet);
     timeLabelId = ESPUI.addControl(ControlType::Label, "[ Date & Time ]", "0", ControlColor::Emerald, Control::noParent);
     ESPUI.begin("ESP32 NTP Clock");
 }
@@ -80,7 +80,7 @@ void setup()
 {
     STB.setHostname(HOSTNAME);
     STB.setApName(AP_NAME);
-    STB.begin(false, false, false);
+    STB.begin(false, false);
 
     initClock();
     initESPUI();
