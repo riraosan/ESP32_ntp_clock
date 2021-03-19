@@ -32,8 +32,8 @@ SOFTWARE.
 #define HOSTNAME "atom_clock"
 #define AP_NAME "ATOM-G-AP"
 
-#define CLK 2
-#define DIO 3
+#define CLK 22
+#define DIO 19
 
 Ticker clocker;
 
@@ -50,9 +50,19 @@ void printLCD(void)
     sprintf(buffer, "%02d%02d", tm->tm_hour, tm->tm_min);
     String _time(buffer);
 
-    log_d("%d", _time.toInt());
+    //log_d("%d", _time.toInt());
+    static int flag = 0;
 
-    display.showNumberDec(_time.toInt(), true);
+    flag = ~flag;
+
+    if (flag)
+    {
+        display.showNumberDecEx(_time.toInt(), (0x80 >> 2), true);
+    }
+    else
+    {
+        display.showNumberDecEx(_time.toInt(), (0x80 >> 4), true);
+    }
 }
 
 String getTime(void)
@@ -75,6 +85,7 @@ String getTime(void)
 void _clock(void)
 {
     ESPUI.updateControlValue(timeLabelId, getTime());
+    printLCD();
 }
 
 void initClock(void)
@@ -83,7 +94,7 @@ void initClock(void)
     configTzTime("JST-9", "ntp.nict.jp", "ntp.jst.mfeed.ad.jp");
     delay(2000);
 
-    clocker.attach_ms(1000, _clock);
+    clocker.attach_ms(500, _clock);
 }
 
 void initESPUI(void)
@@ -95,10 +106,9 @@ void initESPUI(void)
 
 void initLCD(void)
 {
-    uint8_t data[] = {0xff, 0xff, 0xff, 0xff};
-    //uint8_t blank[] = {0x00, 0x00, 0x00, 0x00};
     display.setBrightness(0x0f);
-
+#if 0
+    uint8_t data[] = {0xff, 0xff, 0xff, 0xff};
     // All segments on
     display.setSegments(data);
     delay(2000);
@@ -110,6 +120,7 @@ void initLCD(void)
     data[3] = display.encodeDigit(3);
     display.setSegments(data);
     delay(2000);
+#endif
 }
 
 void setup(void)
