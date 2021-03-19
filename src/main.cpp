@@ -1,7 +1,7 @@
 /*
 The MIT License (MIT)
 
-Copyright (c) 2020-2021 riraotech.com
+Copyright (c) 2020-2021 riraosan.github.io
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -104,34 +104,30 @@ void initESPUI(void)
     ESPUI.begin("ESP32 NTP Clock");
 }
 
-void initLCD(void)
+void displayOn(void)
 {
-    display.setBrightness(0x0f);
-#if 0
-    uint8_t data[] = {0xff, 0xff, 0xff, 0xff};
-    // All segments on
-    display.setSegments(data);
-    delay(2000);
+    display.setBrightness(7, true);
+    display.showNumberDec(0, true);
+}
 
-    // Selectively set different digits
-    data[0] = display.encodeDigit(0);
-    data[1] = display.encodeDigit(1);
-    data[2] = display.encodeDigit(2);
-    data[3] = display.encodeDigit(3);
-    display.setSegments(data);
-    delay(2000);
-#endif
+void displayOff(void)
+{
+    display.setBrightness(7, false);
+    display.showNumberDec(0, true);
 }
 
 void setup(void)
 {
+    displayOff();
+
     STB.setHostname(HOSTNAME);
     STB.setApName(AP_NAME);
     STB.begin(false, false);
 
     initClock();
     initESPUI();
-    initLCD();
+
+    displayOn();
 }
 
 void loop(void)
