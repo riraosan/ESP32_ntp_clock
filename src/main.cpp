@@ -125,7 +125,7 @@ void setup(void)
 
     initClock();
     initESPUI();
-    bme280.setup();
+    bme280.setup(25, 21);
 
     displayOn();
 }

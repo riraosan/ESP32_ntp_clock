@@ -47,7 +47,7 @@ public:
     float getAltitude(float seaLevel);
     uint32_t getSensorID(void);
 
-    void setup(void);
+    void setup(int sdaPin, int sclPin);
     void handle(void);
 
 private:

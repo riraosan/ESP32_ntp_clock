@@ -108,9 +108,10 @@ void BME280Class::initBME280HumiditySensing(void)
     }
 }
 
-void BME280Class::setup(void)
+void BME280Class::setup(int sdaPin, int sclPin)
 {
-    Wire.setPins(25, 21);
+    Wire.setPins(sdaPin, sclPin);
+
     if (!_bme->begin(BME280_ADDRESS_ALTERNATE))
     {
         log_e("Could not find a valid BME280 sensor, check wiring, address, sensor ID!");
