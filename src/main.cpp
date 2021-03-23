@@ -28,6 +28,7 @@ SOFTWARE.
 #include <Ticker.h>
 #include <esp32-hal-log.h>
 #include <TM1637Display.h>
+#include <BME280Class.h>
 
 #define HOSTNAME "atom_clock"
 #define AP_NAME "ATOM-G-AP"
@@ -46,22 +47,20 @@ void printLCD(void)
     time_t t = time(NULL);
     struct tm *tm = localtime(&t);
 
-    char buffer[128] = {0};
+    char buffer[16] = {0};
     sprintf(buffer, "%02d%02d", tm->tm_hour, tm->tm_min);
     String _time(buffer);
 
-    //log_d("%d", _time.toInt());
-    static int flag = 0;
-
+    static uint8_t flag = 0;
     flag = ~flag;
 
     if (flag)
     {
-        display.showNumberDecEx(_time.toInt(), (0x80 >> 2), true);
+        display.showNumberDec(_time.toInt(), false);
     }
     else
     {
-        display.showNumberDecEx(_time.toInt(), (0x80 >> 4), true);
+        display.showNumberDecEx(_time.toInt(), (0x80 >> 2), false);
     }
 }
 
@@ -113,7 +112,7 @@ void displayOn(void)
 void displayOff(void)
 {
     display.setBrightness(7, false);
-    display.showNumberDec(0, true);
+    display.showNumberDec(0, false);
 }
 
 void setup(void)
@@ -126,6 +125,7 @@ void setup(void)
 
     initClock();
     initESPUI();
+    bme280.setup();
 
     displayOn();
 }
