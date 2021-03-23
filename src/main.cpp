@@ -36,11 +36,26 @@ SOFTWARE.
 #define CLK 22
 #define DIO 19
 
+#define SDA 25
+#define SCL 21
+
 Ticker clocker;
+Ticker sensorChecker;
 
 TM1637Display display(CLK, DIO);
 
 uint16_t timeLabelId;
+String temperature;
+
+void _checkSensor(void)
+{
+    char buffer[16] = {0};
+
+    float temp = bme280.getTemperature();
+    sprintf(buffer, "%02f", temp);
+
+    temperature = buffer;
+}
 
 void printLCD(void)
 {
@@ -115,6 +130,12 @@ void displayOff(void)
     display.showNumberDec(0, false);
 }
 
+void initBME280(void)
+{
+    bme280.setup(SDA, SCL);
+    sensorChecker.attach(60, _checkSensor);
+}
+
 void setup(void)
 {
     displayOff();
@@ -125,7 +146,7 @@ void setup(void)
 
     initClock();
     initESPUI();
-    bme280.setup(25, 21);
+    initBME280();
 
     displayOn();
 }

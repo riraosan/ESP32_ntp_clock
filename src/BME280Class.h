@@ -51,7 +51,6 @@ public:
     void handle(void);
 
 private:
-
     Adafruit_BME280 *_bme;
     Adafruit_Sensor *_pressur;
     Adafruit_Sensor *_temperature;

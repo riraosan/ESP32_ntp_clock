@@ -35,34 +35,54 @@ BME280Class::~BME280Class() {}
 
 float BME280Class::getTemperature(void)
 {
-    float value = _bme->readTemperature();
-    log_d("Temperature = %2.1f*C", value);
+    if (_bme->takeForcedMeasurement())
+    {
+        float value = _bme->readTemperature();
+        log_d("Temperature = %2.1f*C", value);
 
-    return value;
+        return value;
+    }
+
+    return -1;
 }
 
 float BME280Class::getPressure(void)
 {
-    float pascals = _bme->readPressure();
-    log_d("Pressure = %4.1f(hPa)", pascals / 100.0f);
+    if (_bme->takeForcedMeasurement())
+    {
+        float pascals = _bme->readPressure();
+        log_d("Pressure = %4.1f(hPa)", pascals / 100.0f);
 
-    return pascals / 100.0f;
+        return pascals / 100.0f;
+    }
+
+    return -1;
 }
 
 float BME280Class::getHumidity(void)
 {
-    float humidity = _bme->readHumidity();
-    log_d("Humidity = %2.1f%%", humidity);
+    if (_bme->takeForcedMeasurement())
+    {
+        float humidity = _bme->readHumidity();
+        log_d("Humidity = %2.1f%%", humidity);
 
-    return humidity;
+        return humidity;
+    }
+
+    return -1;
 }
 
 float BME280Class::getAltitude(float seaLevel)
 {
-    float altitude = _bme->readAltitude(SENSORS_PRESSURE_SEALEVELHPA);
-    log_d("Altitude = %4.1f m", altitude);
+    if (_bme->takeForcedMeasurement())
+    {
+        float altitude = _bme->readAltitude(SENSORS_PRESSURE_SEALEVELHPA);
+        log_d("Altitude = %4.1f m", altitude);
 
-    return altitude;
+        return altitude;
+    }
+
+    return -1;
 }
 
 uint32_t BME280Class::getSensorID(void)
@@ -98,14 +118,6 @@ void BME280Class::initBME280HumiditySensing(void)
                       Adafruit_BME280::SAMPLING_NONE, // pressure
                       Adafruit_BME280::SAMPLING_X4,   // humidity
                       Adafruit_BME280::FILTER_OFF);
-
-    if (_bme->takeForcedMeasurement())
-    {
-        _sensor_ID = getSensorID();
-        getTemperature();
-        getPressure();
-        getHumidity();
-    }
 }
 
 void BME280Class::setup(int sdaPin, int sclPin)
@@ -129,6 +141,7 @@ void BME280Class::setup(int sdaPin, int sclPin)
         log_d("SensorID was: 0x%x", _bme->sensorID());
 
         initBME280WeatherStation();
+        //initBME280HumiditySensing();
     }
 }
 
