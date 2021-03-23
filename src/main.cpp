@@ -33,6 +33,11 @@ SOFTWARE.
 #define HOSTNAME "atom_clock"
 #define AP_NAME "ATOM-G-AP"
 
+#define TIME_ZONE "JST-9"
+#define NTP_SERVER1 "ntp.nict.jp"
+#define NTP_SERVER2 "ntp.jst.mfeed.ad.jp"
+#define NTP_SERVER3 ""
+
 #define CLK 22
 #define DIO 19
 
@@ -45,6 +50,10 @@ Ticker sensorChecker;
 TM1637Display display(CLK, DIO);
 
 uint16_t timeLabelId;
+uint16_t temperatureLabelId;
+uint16_t humidityLabelId;
+uint16_t pressureLabelId;
+
 String temperature;
 
 void _checkSensor(void)
@@ -52,9 +61,11 @@ void _checkSensor(void)
     char buffer[16] = {0};
 
     float temp = bme280.getTemperature();
-    sprintf(buffer, "%02f", temp);
+    sprintf(buffer, "%2.1f℃", temp);
 
     temperature = buffer;
+
+    ESPUI.updateControlValue(temperatureLabelId, temperature);
 }
 
 void printLCD(void)
@@ -105,16 +116,17 @@ void _clock(void)
 void initClock(void)
 {
     //Get NTP Time
-    configTzTime("JST-9", "ntp.nict.jp", "ntp.jst.mfeed.ad.jp");
-    delay(2000);
-
+    configTzTime(TIME_ZONE, NTP_SERVER1, NTP_SERVER2, NTP_SERVER3);
     clocker.attach_ms(500, _clock);
 }
 
 void initESPUI(void)
 {
     ESPUI.setVerbosity(Verbosity::Quiet);
+
     timeLabelId = ESPUI.addControl(ControlType::Label, "[ Date & Time ]", "0", ControlColor::Emerald, Control::noParent);
+    temperatureLabelId = ESPUI.addControl(ControlType::Label, "[ Temperature ]", "0", ControlColor::Sunflower, Control::noParent);
+
     ESPUI.begin("ESP32 NTP Clock");
 }
 
