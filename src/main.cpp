@@ -46,6 +46,7 @@ SOFTWARE.
 
 Ticker clocker;
 Ticker sensorChecker;
+Ticker once01;
 
 TM1637Display display(CLK, DIO);
 
@@ -124,8 +125,11 @@ void initESPUI(void)
 {
     ESPUI.setVerbosity(Verbosity::Quiet);
 
-    timeLabelId = ESPUI.addControl(ControlType::Label, "[ Date & Time ]", "0", ControlColor::Emerald, Control::noParent);
-    temperatureLabelId = ESPUI.addControl(ControlType::Label, "[ Temperature ]", "0", ControlColor::Sunflower, Control::noParent);
+    uint16_t tab1 = ESPUI.addControl(ControlType::Tab, "Date & Time", "Date & Time");
+    uint16_t tab2 = ESPUI.addControl(ControlType::Tab, "Temperatur", "Temperatur");
+
+    timeLabelId = ESPUI.addControl(ControlType::Label, "[ Date & Time ]", "0", ControlColor::Emerald, tab1);
+    temperatureLabelId = ESPUI.addControl(ControlType::Label, "[ Temperature ]", "0", ControlColor::Sunflower, tab2);
 
     ESPUI.begin("ESP32 NTP Clock");
 }
@@ -146,6 +150,7 @@ void initBME280(void)
 {
     bme280.setup(SDA, SCL);
     sensorChecker.attach(60, _checkSensor);
+    once01.once(5, _checkSensor);
 }
 
 void setup(void)
