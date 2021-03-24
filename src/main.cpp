@@ -26,9 +26,10 @@ SOFTWARE.
 #include <SerialTelnetBridge.h>
 #include <ESPUI.h>
 #include <Ticker.h>
-#include <esp32-hal-log.h>
 #include <TM1637Display.h>
 #include <BME280Class.h>
+
+#include <esp32-hal-log.h>
 
 #define HOSTNAME "atom_clock"
 #define AP_NAME "ATOM-G-AP"
@@ -46,7 +47,6 @@ SOFTWARE.
 
 Ticker clocker;
 Ticker sensorChecker;
-Ticker once01;
 
 TM1637Display display(CLK, DIO);
 
@@ -55,21 +55,56 @@ uint16_t temperatureLabelId;
 uint16_t humidityLabelId;
 uint16_t pressureLabelId;
 
-String temperature;
+bool showSensor = false;
+
+void printTemperature(float temp)
+{
+    char buffer[16] = {0};
+    //LED
+    sprintf(buffer, "%2f", temp);
+    String tempLed(buffer);
+    display.showNumberDecEx(tempLed.toInt(), (0x80 >> 0), false);
+
+    //WebUI
+    sprintf(buffer, "%2.1f℃", temp);
+    String tempUI(buffer);
+    ESPUI.updateControlValue(temperatureLabelId, tempUI);
+}
+
+void printHumidity(float temp)
+{
+    char buffer[16] = {0};
+    //LED
+    sprintf(buffer, "%2f", temp);
+    String humidLed(buffer);
+    display.showNumberDecEx(humidLed.toInt(), (0x80 >> 0), false);
+
+    //WebUI
+    sprintf(buffer, "%2.1f%%", temp);
+    String humidUI(buffer);
+    ESPUI.updateControlValue(humidityLabelId, humidUI);
+}
+
+void printPressure(float temp)
+{
+    char buffer[16] = {0};
+    //LED
+    sprintf(buffer, "%4f", temp);
+    String pressLed(buffer);
+    display.showNumberDecEx(pressLed.toInt(), (0x80 >> 0), false);
+
+    //WebUI
+    sprintf(buffer, "%2.1fhPa", temp);
+    String pressUI(buffer);
+    ESPUI.updateControlValue(pressureLabelId, pressUI);
+}
 
 void _checkSensor(void)
 {
-    char buffer[16] = {0};
-
-    float temp = bme280.getTemperature();
-    sprintf(buffer, "%2.1f℃", temp);
-
-    temperature = buffer;
-
-    ESPUI.updateControlValue(temperatureLabelId, temperature);
+    showSensor = true;
 }
 
-void printLCD(void)
+void printTime(void)
 {
     time_t t = time(NULL);
     struct tm *tm = localtime(&t);
@@ -111,12 +146,11 @@ String getTime(void)
 void _clock(void)
 {
     ESPUI.updateControlValue(timeLabelId, getTime());
-    printLCD();
+    printTime();
 }
 
 void initClock(void)
 {
-    //Get NTP Time
     configTzTime(TIME_ZONE, NTP_SERVER1, NTP_SERVER2, NTP_SERVER3);
     clocker.attach_ms(500, _clock);
 }
@@ -126,10 +160,12 @@ void initESPUI(void)
     ESPUI.setVerbosity(Verbosity::Quiet);
 
     uint16_t tab1 = ESPUI.addControl(ControlType::Tab, "Date & Time", "Date & Time");
-    uint16_t tab2 = ESPUI.addControl(ControlType::Tab, "Temperatur", "Temperatur");
+    uint16_t tab2 = ESPUI.addControl(ControlType::Tab, "Weather Station", "Weather Station");
 
     timeLabelId = ESPUI.addControl(ControlType::Label, "[ Date & Time ]", "0", ControlColor::Emerald, tab1);
     temperatureLabelId = ESPUI.addControl(ControlType::Label, "[ Temperature ]", "0", ControlColor::Sunflower, tab2);
+    humidityLabelId = ESPUI.addControl(ControlType::Label, "[ Humidity ]", "0", ControlColor::Sunflower, tab2);
+    pressureLabelId = ESPUI.addControl(ControlType::Label, "[ Pressure ]", "0", ControlColor::Sunflower, tab2);
 
     ESPUI.begin("ESP32 NTP Clock");
 }
@@ -137,7 +173,7 @@ void initESPUI(void)
 void displayOn(void)
 {
     display.setBrightness(7, true);
-    display.showNumberDec(0, true);
+    display.showNumberDec(0, false);
 }
 
 void displayOff(void)
@@ -149,8 +185,7 @@ void displayOff(void)
 void initBME280(void)
 {
     bme280.setup(SDA, SCL);
-    sensorChecker.attach(60, _checkSensor);
-    once01.once(5, _checkSensor);
+    sensorChecker.attach_ms(60 * 1000, _checkSensor);
 }
 
 void setup(void)
@@ -166,11 +201,33 @@ void setup(void)
     initBME280();
 
     displayOn();
+
+    showSensor = true;
 }
 
 void loop(void)
 {
     STB.handle();
+
+    if(showSensor)
+    {
+        displayOn();
+        delay(10 * 1000);
+        clocker.detach();
+
+        printTemperature(bme280.getTemperature());
+        delay(2 * 1000);
+        printHumidity(bme280.getHumidity());
+        delay(2 * 1000);
+        printPressure(bme280.getPressure());
+        delay(2 * 1000);
+
+        displayOff();
+
+        clocker.attach_ms(500, _clock);
+
+        showSensor = false;
+    }
 
     yield();
 }
