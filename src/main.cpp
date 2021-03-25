@@ -61,9 +61,10 @@ void printTemperature(float temp)
 {
     char buffer[16] = {0};
     //LED
-    sprintf(buffer, "%2f", temp);
-    String tempLed(buffer);
-    display.showNumberDecEx(tempLed.toInt(), (0x80 >> 0), false);
+    sprintf(buffer, "0x%2.0fC", temp);
+
+    display.clear();
+    display.showNumberHexEx(strtol(buffer, 0, 16), (0x80 >> 2), false, 3, 1);
 
     //WebUI
     sprintf(buffer, "%2.1f℃", temp);
@@ -77,6 +78,7 @@ void printHumidity(float temp)
     //LED
     sprintf(buffer, "%2f", temp);
     String humidLed(buffer);
+    display.clear();
     display.showNumberDecEx(humidLed.toInt(), (0x80 >> 0), false);
 
     //WebUI
@@ -91,6 +93,7 @@ void printPressure(float temp)
     //LED
     sprintf(buffer, "%4f", temp);
     String pressLed(buffer);
+    display.clear();
     display.showNumberDecEx(pressLed.toInt(), (0x80 >> 0), false);
 
     //WebUI
@@ -116,14 +119,10 @@ void printTime(void)
     static uint8_t flag = 0;
     flag = ~flag;
 
-    if (flag)
-    {
-        display.showNumberDec(_time.toInt(), false);
-    }
+    if(flag)
+        display.showNumberDecEx(_time.toInt(), (0x80 >> 2), true);
     else
-    {
-        display.showNumberDecEx(_time.toInt(), (0x80 >> 2), false);
-    }
+        display.showNumberDecEx(_time.toInt(), (0x80 >> 4), true);
 }
 
 String getTime(void)
@@ -173,13 +172,13 @@ void initESPUI(void)
 void displayOn(void)
 {
     display.setBrightness(7, true);
-    display.showNumberDec(0, false);
+    display.clear();
 }
 
 void displayOff(void)
 {
     display.setBrightness(7, false);
-    display.showNumberDec(0, false);
+    display.clear();
 }
 
 void initBME280(void)
@@ -209,8 +208,9 @@ void loop(void)
 {
     STB.handle();
 
-    if(showSensor)
+    if (showSensor)
     {
+        clocker.attach_ms(500, _clock);
         displayOn();
         delay(10 * 1000);
         clocker.detach();
@@ -223,8 +223,6 @@ void loop(void)
         delay(2 * 1000);
 
         displayOff();
-
-        clocker.attach_ms(500, _clock);
 
         showSensor = false;
     }
