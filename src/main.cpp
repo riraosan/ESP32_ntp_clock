@@ -45,8 +45,16 @@ SOFTWARE.
 #define SDA 25
 #define SCL 21
 
+#define uS_TO_S_FACTOR 1000000ULL /* Conversion factor for micro seconds to seconds */
+#define TIME_TO_SLEEP 48          /* Time ESP32 will go to sleep (in seconds) */
+
 Ticker clocker;
 Ticker sensorChecker;
+Ticker tempeChecker;
+Ticker humidChecker;
+Ticker pressChecker;
+Ticker displaySwitcher;
+Ticker sleeper;
 
 TM1637Display display(CLK, DIO);
 
@@ -54,8 +62,6 @@ uint16_t timeLabelId;
 uint16_t temperatureLabelId;
 uint16_t humidityLabelId;
 uint16_t pressureLabelId;
-
-bool showSensor = false;
 
 void printTemperature(float temp)
 {
@@ -102,9 +108,20 @@ void printPressure(float temp)
     ESPUI.updateControlValue(pressureLabelId, pressUI);
 }
 
-void _checkSensor(void)
+void _checkTempe(void)
 {
-    showSensor = true;
+    clocker.detach();
+    printTemperature(bme280.getTemperature());
+}
+
+void _checkHumid(void)
+{
+    printHumidity(bme280.getHumidity());
+}
+
+void _checkPress(void)
+{
+    printPressure(bme280.getPressure());
 }
 
 void printTime(void)
@@ -119,7 +136,7 @@ void printTime(void)
     static uint8_t flag = 0;
     flag = ~flag;
 
-    if(flag)
+    if (flag)
         display.showNumberDecEx(_time.toInt(), (0x80 >> 2), true);
     else
         display.showNumberDecEx(_time.toInt(), (0x80 >> 4), true);
@@ -184,48 +201,62 @@ void displayOff(void)
 void initBME280(void)
 {
     bme280.setup(SDA, SCL);
-    sensorChecker.attach_ms(60 * 1000, _checkSensor);
+}
+
+void initLightSleep(void)
+{
+    esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR);
+    log_d("Setup ESP32 to sleep for every %s Seconds", String(TIME_TO_SLEEP).c_str());
+}
+
+void connecting(void)
+{
+    static uint8_t flag = 0;
+    flag = ~flag;
+
+    if (flag)
+        display.showNumberDecEx(8, (0x80 >> 3), false);
+    else
+        display.showNumberDecEx(8, (0x80 >> 4), false);
+
+    log_d("connecting..");
 }
 
 void setup(void)
 {
-    displayOff();
+    displayOn();
 
+    STB.setWiFiConnectChecker(connecting);
     STB.setHostname(HOSTNAME);
     STB.setApName(AP_NAME);
     STB.begin(false, false);
+
+    displayOff();
 
     initClock();
     initESPUI();
     initBME280();
 
-    displayOn();
-
-    showSensor = true;
+#ifdef ENABLE_LIGHT_SLEEP_MODE
+    initLightSleep();
+#endif
 }
 
 void loop(void)
 {
     STB.handle();
 
-    if (showSensor)
-    {
-        clocker.attach_ms(500, _clock);
-        displayOn();
-        delay(10 * 1000);
-        clocker.detach();
+    clocker.attach_ms(500, _clock);
+    displayOn();
+    tempeChecker.once(5, _checkTempe);
+    humidChecker.once(7, _checkHumid);
+    pressChecker.once(9, _checkPress);
+    displaySwitcher.once(11, displayOff);
 
-        printTemperature(bme280.getTemperature());
-        delay(2 * 1000);
-        printHumidity(bme280.getHumidity());
-        delay(2 * 1000);
-        printPressure(bme280.getPressure());
-        delay(2 * 1000);
-
-        displayOff();
-
-        showSensor = false;
-    }
+#ifdef ENABLE_LIGHT_SLEEP_MODE
+    delay(12 * 1000);
+    esp_light_sleep_start();
+#endif
 
     yield();
 }
