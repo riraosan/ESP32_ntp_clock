@@ -252,9 +252,9 @@ void loop(void)
     humidChecker.once(7, _checkHumid);
     pressChecker.once(9, _checkPress);
     displaySwitcher.once(11, displayOff);
+    delay(12 * 1000);
 
 #ifdef ENABLE_LIGHT_SLEEP_MODE
-    delay(12 * 1000);
     esp_light_sleep_start();
 #endif
 

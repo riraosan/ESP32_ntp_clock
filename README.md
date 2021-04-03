@@ -19,4 +19,4 @@ The 7-segment LED driver IC uses [TM1637](https://github.com/avishorp/TM1637).
 
 ---
 
-Powered by Google Translate ;-)
+Translated by Google Translate ;-)
