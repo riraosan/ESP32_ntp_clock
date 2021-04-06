@@ -15,7 +15,7 @@ The 7-segment LED driver IC uses [TM1637](https://github.com/avishorp/TM1637).
 - [x] Temperature, humidity and barometric pressure are displayed every minute for 2 seconds.
 - [x] LED display pattern: Time(5 sec) -> Temperature(2 sec) -> Humidity(2 sec) -> Pressure(2 sec) -> Display off for about 48 seconds
 - [x] The time is displayed in "HH:MM" format.
-- [ ] If you press the button, the connection to the previously connected access point will be canceled, and you will be able to set the connection to the new access point.
+- [x] If you press the button, the connection to the previously connected access point will be canceled, and you will be able to set the connection to the new access point.
 
 ---
 
