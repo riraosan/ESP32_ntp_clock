@@ -227,14 +227,13 @@ void connecting(void)
     flag = ~flag;
 
     if (flag)
-        display.showNumberDecEx(0, (0x80 >> 3), true);
+        display.showNumberDecEx(8, (0x80 >> 3), false);
     else
-        display.showNumberDecEx(0, (0x80 >> 4), true);
+        display.showNumberDecEx(8, (0x80 >> 4), false);
 }
 
 void released(Button2 &btn)
 {
-    log_d("released: %d", btn.wasPressedFor());
     WiFi.disconnect(true, true);
     ESP.restart();
 }
