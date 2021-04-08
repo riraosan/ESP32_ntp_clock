@@ -10,23 +10,26 @@ The 7-segment LED driver IC uses [TM1637](https://github.com/avishorp/TM1637).
 
 ## 📷 Photos
 
-<img src="https://github.com/riraosan/riraosan.github.io/blob/master/2021-03-21/IMG_1384.png?raw=true" width="300"/><img src="https://github.com/riraosan/riraosan.github.io/blob/master/2021-03-21/IMG_1382.png?raw=true" width="300"/><img src="https://github.com/riraosan/riraosan.github.io/blob/master/2021-03-21/IMG_1372.png?raw=true" width="300"/>
+<img src="https://github.com/riraosan/riraosan.github.io/blob/master/2021-03-21/IMG_1384.png?raw=true" width="300"/><img src="https://github.com/riraosan/riraosan.github.io/blob/master/2021-03-21/IMG_1382.png?raw=true" width="300"/><img src="https://github.com/riraosan/riraosan.github.io/blob/master/2021-04-07/IMG_1387.png?raw=true" width="300"/>
 
 ## 🏗️ How to use
 
 1. Build the source code with PlatformIO and write it to ATOM Lite.
-1. Connect this NTP clock to your Home WiFi access point.
-1. Access "http://atom_clcok.local" from the browser of a PC or smartphone connected to the same Home WiFi access point.
-1. The temperature, humidity, barometric pressure, and time will be displayed in the GUI created by ESPUI.
+2. Connect this NTP clock to your Home WiFi access point.
+   <img src="https://github.com/riraosan/riraosan.github.io/blob/master/2021-04-07/IMG_1503.png?raw=true" width="200"/><img src="https://github.com/riraosan/riraosan.github.io/blob/master/2021-04-07/IMG_1505.png?raw=true" width="200"/>
+
+3. Access "http://atom_clcok.local" from the browser of a PC or smartphone connected to the same Home WiFi access point.
+4. The temperature, humidity, barometric pressure, and time will be displayed in the GUI created by ESPUI.
+   <img src="https://github.com/riraosan/riraosan.github.io/blob/master/2021-04-07/IMG_1491.png?raw=true" width="200"/><img src="https://github.com/riraosan/riraosan.github.io/blob/master/2021-04-07/IMG_1492.png?raw=true" width="200"/>
 
 ## 🤖 Functions
 
 - [x] The 1st digit dot of the 7-segment LED blinks 0.3 second cycle while the access point is connecting.
 - [x] the 1st digit 7-segment LED displays "0000" while the access point is connecting.
-- [x] Temperature, humidity and barometric pressure are displayed for 60 seconds.
+- [x] Temperature, humidity and barometric pressure are displayed for  evry 60 seconds.
 - [x] LED display pattern: Time(5 sec) -> Temperature(2 sec) -> Humidity(2 sec) -> Pressure(2 sec) -> Display off for about 48 seconds
 - [x] The time is displayed in "HH:MM" format.
-- [x] If you press the button, the connection to the previously connected access point will be canceled, and you will be able to set the connection to the new access point.
+- [x] If you press the button(G39), the connection to the previously connected access point will be canceled, and you will be able to set the connection to the new access point.
 
 ## 🍞 Breadboard diagram (by fritzing)
 
