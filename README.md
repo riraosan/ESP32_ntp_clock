@@ -72,15 +72,12 @@ Thanks to the authors of these libraries.🤝
 - GitHub: [riraosan](https://github.com/riraosan)
 - Qiita: [riaosan](https://qiita.com/riraosan)
 
-> Serenity Prayer
+> _Serenity Prayer_
 >
 > God, grant me the serenity to accept the things I cannot change
->
 > courage to change the things I can,
->
 > and wisdom to know the difference.
-
-[Reinhold Niebuhr](https://en.wikipedia.org/wiki/Reinhold_Niebuhr)
+> [_Reinhold Niebuhr_](https://en.wikipedia.org/wiki/Reinhold_Niebuhr)
 
 ## 📝 License
 
