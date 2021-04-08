@@ -74,9 +74,9 @@ Thanks to the authors of these libraries.🤝
 
 > _Serenity Prayer_
 >
-> God, grant me the serenity to accept the things I cannot change
-> courage to change the things I can,
-> and wisdom to know the difference.
+> God, grant me the serenity to accept the things I cannot change<br>
+> courage to change the things I can,<br>
+> and wisdom to know the difference.<br>
 > [_Reinhold Niebuhr_](https://en.wikipedia.org/wiki/Reinhold_Niebuhr)
 
 ## 📝 License
