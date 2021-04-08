@@ -16,10 +16,13 @@ The 7-segment LED driver IC uses [TM1637](https://github.com/avishorp/TM1637).
 
 1. Build the source code with PlatformIO and write it to ATOM Lite.
 2. Connect this NTP clock to your Home WiFi access point.
-   <img src="https://github.com/riraosan/riraosan.github.io/blob/master/2021-04-07/IMG_1503.png?raw=true" width="200"/><img src="https://github.com/riraosan/riraosan.github.io/blob/master/2021-04-07/IMG_1505.png?raw=true" width="200"/>
 
-3. Access "http://atom_clcok.local" from the browser of a PC or smartphone connected to the same Home WiFi access point.
-4. The temperature, humidity, barometric pressure, and time will be displayed in the GUI created by ESPUI.
+   <img src="https://github.com/riraosan/riraosan.github.io/blob/master/2021-04-07/IMG_1503.png?raw=true" width="200" align=top />
+   <img src="https://github.com/riraosan/riraosan.github.io/blob/master/2021-04-07/IMG_1505.png?raw=true" width="200" align=top />
+
+4. Access "http://atom_clcok.local" from the browser of a PC or smartphone connected to the same Home WiFi access point.
+5. The temperature, humidity, barometric pressure, and time will be displayed in the GUI created by ESPUI.
+
    <img src="https://github.com/riraosan/riraosan.github.io/blob/master/2021-04-07/IMG_1491.png?raw=true" width="200"/><img src="https://github.com/riraosan/riraosan.github.io/blob/master/2021-04-07/IMG_1492.png?raw=true" width="200"/>
 
 ## 🤖 Functions
