@@ -227,9 +227,9 @@ void connecting(void)
     flag = ~flag;
 
     if (flag)
-        display.showNumberDecEx(8, (0x80 >> 3), false);
+        display.showNumberDecEx(8888, (0x80 >> 3), false);
     else
-        display.showNumberDecEx(8, (0x80 >> 4), false);
+        display.showNumberDecEx(8888, (0x80 >> 4), false);
 }
 
 void released(Button2 &btn)
