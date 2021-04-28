@@ -12,6 +12,9 @@ The 7-segment LED driver IC uses [TM1637](https://github.com/avishorp/TM1637).
 
 <img src="https://github.com/riraosan/riraosan.github.io/blob/master/2021-03-21/IMG_1384.png?raw=true" width="300"/> <img src="https://github.com/riraosan/riraosan.github.io/blob/master/2021-03-21/IMG_1382.png?raw=true" width="300"/> <img src="https://github.com/riraosan/riraosan.github.io/blob/master/2021-04-07/IMG_1387.png?raw=true" width="300"/>
 
+- NITORI LED Module Pin assignment
+<img src="https://github.com/riraosan/riraosan.github.io/blob/master/2021-04-27/IMG_1231.png?raw=true" width="300"/>
+
 ## Dependencies
 
 This library is dependent on the following libraries to function properly.
